@@ -3,9 +3,29 @@
 // Constructor
 LEDStrip::LEDStrip(int numberOfLEDs) {
     numLED = numberOfLEDs;
+    animationDelay = 25;
+    animationBrightness = 10;
 
     leds = new CRGB[numberOfLEDs];
-    animationFunction = &LEDStrip::off;
+    FastLED.setBrightness(animationBrightness);
+
+    setAnimation(2);
+}
+
+LEDStrip::LEDStrip(int numberOfLEDs, int animationType) {
+    numLED = numberOfLEDs;
+    animationDelay = 25;
+    animationBrightness = 10;
+
+    leds = new CRGB[numberOfLEDs];
+    FastLED.setBrightness(animationBrightness);
+
+    setAnimation(animationType);
+}
+
+void LEDStrip::setBrightness(int brightness) {
+    this->animationBrightness = brightness;
+    FastLED.setBrightness(brightness);
 }
 
 void LEDStrip::setAnimation(int animation) {
@@ -22,6 +42,12 @@ void LEDStrip::setAnimation(int animation) {
         default:
             animationFunction = &LEDStrip::off;
     }
+}
+
+void LEDStrip::stopAnimation() {
+    animationFunction = &LEDStrip::off;
+
+    runAnimation();
 }
 
 void LEDStrip::runAnimation() {
@@ -49,27 +75,23 @@ void LEDStrip::color_pass() {
         leds[i] = CRGB(100, 0, 0);
 
         FastLED.show();
-        delay(25);
     }
 
     for (int i = numLED - 1; i >= 0; i--) {
         leds[i] = CRGB(0, 100, 0);
 
         FastLED.show();
-        delay(25);
     }
 
     for (int i = 0; i < numLED; i++) {
         leds[i] = CRGB(0, 0, 100);
 
         FastLED.show();
-        delay(25);
     }
 
     for (int i = numLED - 1; i >= 0; i--) {
         leds[i] = CRGB(100, 0, 100);
 
         FastLED.show();
-        delay(25);
     }
 }
